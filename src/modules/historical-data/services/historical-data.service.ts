@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { RawAggregatedTrade } from './models/raw-aggregated-trade';
+import { RawAggregatedTrade } from '../models/raw-aggregated-trade';
 import Dinero from 'dinero.js';
-import { HistoricalDataResponseDto } from './dtos/historical-data.dto';
-import { BinanceService } from '../binance/services/binance.service';
+import { HistoricalDataResponseDto } from '../dtos/historical-data.dto';
+import { BinanceService } from '../../binance/services/binance.service';
 
 @Injectable()
 export class HistoricalDataService {
@@ -21,7 +21,7 @@ export class HistoricalDataService {
 
   }
 
-  public async fetchHistoricalData(
+  public async calculateTradesStatistics(
     startDate: string,
     endDate: string,
   ): Promise<HistoricalDataResponseDto> {
