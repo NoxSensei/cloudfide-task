@@ -3,6 +3,7 @@ import { HttpModule, HttpService } from '@nestjs/axios';
 import { BinanceService } from './binance.service';
 import { of } from 'rxjs';
 import { InternalServerErrorException } from '@nestjs/common';
+import { SpotSymbol } from '../../historical-data/models/symbol';
 
 describe('BinanceService', () => {
   it('should return response data', async () => {
@@ -38,8 +39,9 @@ describe('BinanceService', () => {
 
     const startDate = new Date('2025-04-01T13:19:09.620Z').getTime();
     const endDate = new Date('2025-04-02T13:19:09.620Z').getTime();
+    const symbol = 'BTCUSDC' as SpotSymbol;
 
-    const data = await binanceService.getAggregatedTrades(startDate, endDate);
+    const data = await binanceService.getAggregatedTrades(startDate, endDate, symbol);
     expect(data.length).toBe(1);
   });
 
@@ -54,9 +56,10 @@ describe('BinanceService', () => {
 
     const startDate = new Date('2025-04-01T13:19:09.620Z').getTime();
     const endDate = new Date('2025-04-02T13:19:09.620Z').getTime();
+    const symbol = 'BTCUSDC' as SpotSymbol;
 
     expect(
-      () => binanceService.getAggregatedTrades(startDate, endDate),
+      () => binanceService.getAggregatedTrades(startDate, endDate, symbol),
     ).not.toThrow(InternalServerErrorException);
   });
 });

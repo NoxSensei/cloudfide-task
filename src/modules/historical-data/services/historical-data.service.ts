@@ -9,26 +9,29 @@ import { RawAggregatedTrade } from '../models/raw-aggregated-trade';
 import Dinero from 'dinero.js';
 import { HistoricalDataResponseDto } from '../dtos/historical-data.dto';
 import { BinanceService } from '../../binance/services/binance.service';
+import { SpotSymbol } from '../models/symbol';
 
 @Injectable()
 export class HistoricalDataService {
   private logger: Logger;
 
-  public constructor(
-    private readonly binanceService: BinanceService,
-  ) {
+  public constructor(private readonly binanceService: BinanceService) {
     this.logger = new Logger(HistoricalDataService.name);
-
   }
 
   public async calculateTradesStatistics(
     startDate: string,
     endDate: string,
+    symbol: SpotSymbol,
   ): Promise<HistoricalDataResponseDto> {
     const startTimestamp = new Date(startDate).getTime();
     const endTimestamp = new Date(endDate).getTime();
 
-    const data = await this.binanceService.getAggregatedTrades(startTimestamp, endTimestamp);
+    const data = await this.binanceService.getAggregatedTrades(
+      startTimestamp,
+      endTimestamp,
+      symbol
+    );
     const normalizedData = data.map((element) => ({
       // TODO consider issues with precission
       price: Number.parseFloat(element.p),

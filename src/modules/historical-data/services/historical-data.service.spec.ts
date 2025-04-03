@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { BinanceService } from '../../binance/services/binance.service';
 import { HistoricalDataService } from './historical-data.service';
+import { SpotSymbol } from '../models/symbol';
 
 describe('HistoricalDataService', () => {
   it('should calculate trade statistics', async () => {
@@ -51,10 +52,12 @@ describe('HistoricalDataService', () => {
 
     const startDate = '2025-04-01T13:19:09.620Z';
     const endDate = '2025-04-02T13:19:09.620Z';
+    const symbol = 'BTCUSDC' as SpotSymbol;
 
     const data = await historicalDataService.calculateTradesStatistics(
       startDate,
       endDate,
+      symbol
     );
     expect(data).toStrictEqual({
       lowestPrice: 0.01533102,

@@ -1,4 +1,5 @@
-import { IsDateString } from 'class-validator';
+import { IsDateString, IsEnum } from 'class-validator';
+import { SpotSymbol } from '../models/symbol';
 
 export class HistoricalDataRequestDto {
   @IsDateString()
@@ -6,6 +7,9 @@ export class HistoricalDataRequestDto {
 
   @IsDateString()
   public dateTo: string;
+
+  @IsEnum(SpotSymbol)
+  public symbol: SpotSymbol;
 }
 
 export class HistoricalDataResponseDto {

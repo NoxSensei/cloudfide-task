@@ -6,6 +6,7 @@ import {
 import { RawAggregatedTrade } from '../../historical-data/models/raw-aggregated-trade';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { SpotSymbol } from '../../historical-data/models/symbol';
 
 @Injectable()
 export class BinanceService {
@@ -21,12 +22,13 @@ export class BinanceService {
   public async getAggregatedTrades(
     startTimestamp: number,
     endTimestamp: number,
+    symbol: SpotSymbol,
   ): Promise<RawAggregatedTrade[]> {
     try {
       const url = `${this.binanceApiUrl}/v3/aggTrades`;
       const response$ = this.httpService.get<RawAggregatedTrade[]>(url, {
         params: {
-          symbol: 'BTCUSDC',
+          symbol: symbol,
           startTime: startTimestamp,
           endTime: endTimestamp,
         },

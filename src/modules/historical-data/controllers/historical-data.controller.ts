@@ -18,6 +18,7 @@ export class HistoricalDataController {
     return this.historicalDataService.calculateTradesStatistics(
       query.dateFrom,
       query.dateTo,
+      query.symbol,
     );
   }
 }
