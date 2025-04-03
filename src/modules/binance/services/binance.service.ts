@@ -19,6 +19,7 @@ export class BinanceService {
     this.logger = new Logger(BinanceService.name);
   }
 
+  // TODO can be extended with the retry logic
   public async getAggregatedTrades(
     startTimestamp: number,
     endTimestamp: number,
