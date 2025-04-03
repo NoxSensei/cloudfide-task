@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { HistoricalDataService } from '../services/historical-data.service';
 import {
   HistoricalDataRequestDto,
@@ -7,18 +7,27 @@ import {
 
 @Controller('/trades-history')
 export class HistoricalDataController {
+  private readonly logger: Logger;
+
   public constructor(
     private readonly historicalDataService: HistoricalDataService,
-  ) {}
+  ) {
+    this.logger = new Logger(HistoricalDataController.name);
+  }
 
   @Get()
   public async getHistoricalData(
     @Query() query: HistoricalDataRequestDto,
   ): Promise<HistoricalDataResponseDto> {
-    return this.historicalDataService.calculateTradesStatistics(
+    const data = await this.historicalDataService.calculateTradesStatistics(
       query.dateFrom,
       query.dateTo,
       query.symbol,
     );
+
+    this.logger.log(
+      `Trades History for ${query.dateFrom}-${query.dateTo} changed by ${data.changeRate?.toFixed(4)}`,
+    );
+    return data;
   }
 }
