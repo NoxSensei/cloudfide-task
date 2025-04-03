@@ -8,13 +8,17 @@ import { firstValueFrom } from 'rxjs';
 import { RawAggregatedTrade } from './models/raw-aggregated-trade';
 import Dinero from 'dinero.js';
 import { HistoricalDataResponseDto } from './dtos/historical-data.dto';
+import { BinanceService } from '../binance/services/binance.service';
 
 @Injectable()
 export class HistoricalDataService {
   private logger: Logger;
 
-  public constructor(private readonly httpService: HttpService) {
+  public constructor(
+    private readonly binanceService: BinanceService,
+  ) {
     this.logger = new Logger(HistoricalDataService.name);
+
   }
 
   public async fetchHistoricalData(
@@ -24,7 +28,7 @@ export class HistoricalDataService {
     const startTimestamp = new Date(startDate).getTime();
     const endTimestamp = new Date(endDate).getTime();
 
-    const data = await this.getAggregatedTrades(startTimestamp, endTimestamp);
+    const data = await this.binanceService.getAggregatedTrades(startTimestamp, endTimestamp);
     const normalizedData = data.map((element) => ({
       // TODO consider issues with precission
       price: Number.parseFloat(element.p),
@@ -57,30 +61,6 @@ export class HistoricalDataService {
       endPrice: lastValue?.price ?? null,
       changeRate,
     };
-  }
-
-  private async getAggregatedTrades(
-    startTimestamp: number,
-    endTimestamp: number,
-  ): Promise<RawAggregatedTrade[]> {
-    try {
-      const url = 'https://api.binance.com/api/v3/aggTrades';
-      const response$ = this.httpService.get<RawAggregatedTrade[]>(url, {
-        params: {
-          symbol: 'BTCUSDC',
-          startTime: startTimestamp,
-          endTime: endTimestamp,
-        },
-      });
-
-      const response = await firstValueFrom(response$);
-      return response.data;
-    } catch (error) {
-      this.logger.error(error.message, error.stack);
-      throw new InternalServerErrorException(
-        'Internal Server Error - Please try again later',
-      );
-    }
   }
 
   public calculateChangeRate(
