@@ -1,9 +1,9 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { HistoricalDataService } from './historical-data.service';
+import { HistoricalDataService } from '../services/historical-data.service';
 import {
   HistoricalDataRequestDto,
   HistoricalDataResponseDto,
-} from './dtos/historical-data.dto';
+} from '../dtos/historical-data.dto';
 
 @Controller('/trades-history')
 export class HistoricalDataController {
@@ -15,7 +15,7 @@ export class HistoricalDataController {
   public async getHistoricalData(
     @Query() query: HistoricalDataRequestDto,
   ): Promise<HistoricalDataResponseDto> {
-    return this.historicalDataService.fetchHistoricalData(
+    return this.historicalDataService.calculateTradesStatistics(
       query.dateFrom,
       query.dateTo,
     );
