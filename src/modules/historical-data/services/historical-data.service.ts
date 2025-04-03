@@ -32,6 +32,7 @@ export class HistoricalDataService {
       endTimestamp,
       symbol
     );
+
     const normalizedData = data.map((element) => ({
       // TODO consider issues with precission
       price: Number.parseFloat(element.p),
