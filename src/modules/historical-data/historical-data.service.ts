@@ -9,11 +9,16 @@ export class HistoricalDataService {
     ) {
     }
 
-    public async fetchHistoricalData(): Promise<void> {
-        const url = 'https://api.binance.com/api/v3/historicalTrades';
+    public async fetchHistoricalData(startDate: string, endDate: string): Promise<void> {
+        const startTimestamp = new Date(startDate).getTime();
+        const endTimestamp = new Date(endDate).getTime();
+
+        const url = 'https://api.binance.com/api/v3/aggTrades';
         const response$ = this.httpService.get(url, {
             params: {
-                symbol: 'BTCUSDC'
+                symbol: 'BTCUSDC',
+                startTime: startTimestamp,
+                endTime: endTimestamp,
             }
         })
         const response = await firstValueFrom(response$);

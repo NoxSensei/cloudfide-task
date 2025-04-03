@@ -1,5 +1,6 @@
-import {Controller, Get} from "@nestjs/common";
+import {Controller, Get, Query} from "@nestjs/common";
 import {HistoricalDataService} from "./historical-data.service";
+import {HistoricalDataDto} from "./dtos/historical-data.dto";
 
 @Controller('/trades-history')
 export class HistoricalDataController {
@@ -7,7 +8,7 @@ export class HistoricalDataController {
     }
 
     @Get()
-    public getHistoricalData() {
-        return this.historicalDataService.fetchHistoricalData();
+    public getHistoricalData(@Query() query: HistoricalDataDto) {
+        return this.historicalDataService.fetchHistoricalData(query.dateFrom, query.dateTo);
     }
 }
